@@ -13,3 +13,5 @@ Details for accessing the API and expected responses
 > Parameters: search=<string> (text to search by), qty=<int> (number of responses to return)
 
 > Example: base_url/api/recommend/?search=some flowery blue bud&qty=10
+
+*Responses* are in JSON format
