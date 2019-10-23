@@ -1,17 +1,33 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 import json
+from nlp_module import nlp_model
 
-# creates and configures flask app
-app = Flask(__name__)
+###########
+###Setup###
+###########
+
+# Create the application instance
+app = Flask(__name__, template_folder="templates")
 # DB = SQLAlchemy() # Not Implemented
 
-@app.route('/recommend/')
+# Initialize NLP Predictor
+predictor = nlp_model.Predictor()
+
+
+############
+###Routes###
+############
+@app.route('/')
 def root():
-    #dump = pk.dumps('knn_05.pkl')
-    #load = pk.loads('dump')
-    values = randJSON()
-    return values
+    return "API Main.  Use */api/recommend/"
+
+@app.route('/api/recommend/', methods=['GET'])
+def recommend():
+    prediction = predictor.predict('Glorious orange-red sativa')
+    return json.dumps(prediction)
+
+
 
 
 if __name__ == "__main__":
