@@ -18,6 +18,7 @@ predictor = nlp_model.Predictor()
 ############
 ###Routes###
 ############
+
 @app.route('/')
 def root():
     return "API Main.  Use */api/recommend/"
@@ -25,7 +26,7 @@ def root():
 @app.route('/api/recommend/', methods=['GET'])
 def recommend():
     prediction = predictor.predict('Glorious orange-red sativa')
-    return json.dumps(prediction)
+    return json.dumps(prediction.tolist())
 
 
 
