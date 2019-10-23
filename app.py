@@ -1,6 +1,5 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-import json
 from nlp_module import nlp_model
 
 ###########
@@ -26,7 +25,9 @@ def root():
 @app.route('/api/recommend/', methods=['GET'])
 def recommend():
     prediction = predictor.predict('Glorious orange-red sativa')
-    return json.dumps(prediction.tolist())
+    return {  # Can manually call jsonify().  Flask naturally conversts dicts to json objects.
+        "predictions": prediction.tolist()
+    }
 
 
 
