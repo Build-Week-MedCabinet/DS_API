@@ -1,4 +1,5 @@
 import sqlite3
+import pandas
 
 import click
 from flask import current_app, g
@@ -45,11 +46,23 @@ def queryDB(lst):
                                 WHERE S.id=""" + str(i)).fetchall()
         
         desc.append(rows)
+    names = [description[0] for description in c.description]
     
-    return desc
+    format_desc = []
+
+    for row in desc:
+        temp_dic = {}
+        for count,name in enumerate(names):
+            temp_dic[name] = row[0][count]
+            #print(temp_dic[name])
+        format_desc.append(temp_dic)
+
+
+    #print(names)
+    return format_desc
     
    
 # test list to check if the function works   
-lst = [45,32,23]
+lst = [0]
 rows = queryDB(lst)
 print(rows)
