@@ -8,6 +8,8 @@ Details for accessing the API and expected responses
 
 ### Recommender
 
+BASE_URL:
+
 > URL: base_url/api/recommend/?
 
 > Parameters: search=<string> (text to search by), qty=<int> (number of responses to return)

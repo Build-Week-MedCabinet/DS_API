@@ -10,6 +10,9 @@ from errors import InvalidUsage
 ###Setup###
 ###########
 
+# Update database name you want to connect to
+local_db_name = "med_cabinet.sqlite3"
+
 # Initialize NLP Predictor
 predictor = nlp_model.Predictor()
 
@@ -26,7 +29,8 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABSE=os.path.join(app.instance_path, 'strain_db.sqlite')
+        DATABASE=os.path.join(app.instance_path, local_db_name),
+        LOCALDATABASE=os.path.join(os.getcwd(), local_db_name)
     )
 
     if test_config is None:
@@ -60,10 +64,12 @@ def create_app(test_config=None):
                 # print('number_responses', request.args['qty'])  # Debug
                 num_responses = int(request.args['qty'])
 
-        prediction = predictor.predict('Glorious orange-red sativa', size=num_responses)
-        return {  # Can manually call jsonify().  Flask naturally conversts dicts to json objects.
-            "predictions": prediction.tolist()
-        }
+        # Get indices of strain from KDTree model
+        prediction_indices = predictor.predict('Glorious orange-red sativa', size=num_responses)
+        # Query database with those indices
+        prediction_data = db.query_database(prediction_indices.tolist())
+
+        return prediction_data
 
 
     # Register error handler
@@ -76,13 +82,10 @@ def create_app(test_config=None):
     return app
 
 
-
-
-
+app = create_app()
 
 
 if __name__ == "__main__":
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
-    app = create_app()
     app.run(host='0.0.0.0', port=port)

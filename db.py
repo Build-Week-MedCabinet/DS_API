@@ -11,10 +11,19 @@ def get_db():
     initiates connection to configured database.
     """
     if 'db' not in g:
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES,
-        )
+
+        try:  # Connection for server instance
+            # print(current_app.config['DATABASE'])  # DEBUG
+            g.db = sqlite3.connect(
+                current_app.config['DATABASE'],
+                detect_types=sqlite3.PARSE_DECLTYPES,
+            )
+        except:  # Connection for local instance
+            # print(current_app.config['LOCALDATABASE'])  # DEBUG
+            g.db = sqlite3.connect(
+                current_app.config['LOCALDATABASE'],
+                detect_types=sqlite3.PARSE_DECLTYPES,
+            )
         g.db.row_factory = sqlite3.Row
 
     return g.db
@@ -29,13 +38,10 @@ def close_db(e=None):
 def init_app(app):
     app.teardown_appcontext(close_db)
 
-def queryDB(lst):
-    import os
-    
-    os.chdir("D:\\Documents\\Build week projects\\DS_api")
-    conn = sqlite3.connect('med_cabinet.sqlite3')
+def query_database(lst):
+    conn = get_db()
     c = conn.cursor()
-    
+
     desc = []
     for i in lst:
 
@@ -43,13 +49,13 @@ def queryDB(lst):
                                 JOIN Cannabinoids as C ON C.id=S.id
                                 JOIN Terpenes as T ON T.id=S.id
                                 WHERE S.id=""" + str(i)).fetchall()
-        
+
         desc.append(rows)
-    
+    print(desc)
     return desc
-    
-   
-# test list to check if the function works   
-lst = [45,32,23]
-rows = queryDB(lst)
-print(rows)
+
+
+# test list to check if the function works
+# lst = [45,32,23]
+# rows = queryDB(lst)
+# print(rows)
