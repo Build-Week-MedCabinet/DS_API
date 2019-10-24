@@ -13,7 +13,7 @@ app = Flask(__name__, template_folder="templates")
 # DB = SQLAlchemy() # Not Implemented
 
 # Initialize NLP Predictor
-# predictor = nlp_model.Predictor()
+predictor = nlp_model.Predictor()
 
 
 ############
@@ -28,7 +28,6 @@ def root():
 def recommend():
     # Set Defaults
     num_responses = 5
-    predictor = nlp_model.Predictor()
 
     if request.method == 'GET':
         if not 'search' in request.args:
