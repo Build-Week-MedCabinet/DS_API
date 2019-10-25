@@ -48,9 +48,9 @@ def query_database(lst):
     for i in lst:
 
         rows = c.execute("""SELECT * FROM Strain_info as S
-                                JOIN Cannabinoids as C ON C.id=S.id
-                                JOIN Terpenes as T ON T.id=S.id
-                                WHERE S.id=""" + str(i)).fetchall()
+                                JOIN Cannabinoids as C ON C.StrainID=S.StrainID
+                                JOIN Terpenes as T ON T.StrainID=S.StrainID
+                                WHERE S.StrainID=""" + str(i)).fetchall()
 
         desc.append(rows)
     names = [description[0] for description in c.description]
